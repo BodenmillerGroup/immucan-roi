@@ -12,6 +12,10 @@ To install a specific version (e.g. `v0.1.0`) of `immucan-roi`:
 
     pip install git+https://github.com/BodenmillerGroup/immucan-roi.git@v0.1.0
 
+At the time of writing, `immucan-roi` only works with the latest `main` version of napari (>0.4.12, unreleased). To install the latest `main` version of napari from GitHub:
+
+    pip install --upgrade "git+https://github.com/napari/napari"
+
 ## Usage
 
 1. Run `immucan-roi`, select your IMMUcan folder containing `czi` and `mcd` subdirectories and accept the proposed settings

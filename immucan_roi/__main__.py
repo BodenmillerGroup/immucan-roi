@@ -3,7 +3,7 @@ import sys
 from napping import NappingException
 from qtpy.QtWidgets import QMessageBox
 
-from immucan_roi._immucan_napping_application import IMMUcanNappingApplication
+from immucan_roi._immucan_roi import IMMUcanNappingApplication
 
 try:
     from PIL import Image
