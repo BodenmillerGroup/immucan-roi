@@ -39,16 +39,16 @@ class IMMUcanROIWidget(ROIWidget):
 
     def _on_roi_layer_changed(self, old_roi_layer: Optional[Shapes]) -> None:
         super(IMMUcanROIWidget, self)._on_roi_layer_changed(old_roi_layer)
-        self._roi_origin_combo_box.setEnabled(self._roi_layer != self.immucan_roi_layer)
+        immucan_roi_layer = getattr(self, "_immucan_roi_layer", None)
+        self._roi_origin_combo_box.setEnabled(
+            immucan_roi_layer is not None and self._roi_layer != immucan_roi_layer
+        )
 
     def _refresh_save_widget(self) -> None:
         super(IMMUcanROIWidget, self)._refresh_save_widget()
-        if self._roi_layer == self.immucan_roi_layer:
+        immucan_roi_layer = getattr(self, "_immucan_roi_layer", None)
+        if immucan_roi_layer is not None and self._roi_layer == immucan_roi_layer:
             self._roi_file_line_edit.setEnabled(False)
             self._autosave_roi_file_check_box.setEnabled(False)
         else:
             pass  # skipped intentionally (already set in _refresh_save_widget)
-
-    @property
-    def immucan_roi_layer(self) -> Optional[Shapes]:
-        return getattr(self, "_immucan_roi_layer", None)
