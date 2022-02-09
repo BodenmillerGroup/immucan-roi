@@ -61,7 +61,7 @@ class IMMUcanNappingApplication(NappingApplication):
         transf_coords_dir = self._immucan_dir / "mcd_rois"
         transf_coords_dir.mkdir(exist_ok=True)
         empty_source_rois = pd.DataFrame(columns=["Name", "X", "Y", "W", "H"])
-        for source_img_file in source_img_dir.iterdir():
+        for source_img_file in source_img_dir.glob("*"):
             source_coords_file_name = source_img_file.with_suffix(".csv").name
             source_coords_file = source_coords_dir / source_coords_file_name
             if not source_coords_file.exists():
