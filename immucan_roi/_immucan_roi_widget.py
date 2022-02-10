@@ -17,7 +17,7 @@ class IMMUcanROIWidget(ROIWidget):
         immucan_roi_layer: Shapes, immucan_roi_file: Union[str, PathLike]
     ) -> None:
         immucan_roi_layer_accessor = ROILayerAccessor(immucan_roi_layer)
-        immucan_roi_layer_accessor.roi_origin = ROIOrigin.CENTER
+        immucan_roi_layer_accessor.roi_origin = ROIOrigin.BOTTOM_RIGHT
         immucan_roi_layer_accessor.roi_file = Path(immucan_roi_file)
         immucan_roi_layer_accessor.autosave_roi_file = True
 
