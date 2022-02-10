@@ -35,7 +35,7 @@ class IMMUcanROIWidget(ROIWidget):
     def save_roi_file(self) -> None:
         super(IMMUcanROIWidget, self).save_roi_file()
         immucan_roi_layer = getattr(self, "_immucan_roi_layer", None)
-        if self._roi_layer == immucan_roi_layer:
+        if immucan_roi_layer is not None and self._roi_layer == immucan_roi_layer:
             self._app.reload_source_coords_and_update_and_save_transf_coords()
 
     def _on_roi_layer_changed(self, old_roi_layer: Optional[Shapes]) -> None:
