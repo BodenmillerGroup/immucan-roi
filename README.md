@@ -8,9 +8,9 @@ To install the latest version of `immucan-roi`:
 
     pip install git+https://github.com/BodenmillerGroup/immucan-roi.git
 
-To install a specific version (e.g. `v0.2.1`) of `immucan-roi`:
+To install a specific version (e.g. `v0.2.2`) of `immucan-roi`:
 
-    pip install git+https://github.com/BodenmillerGroup/immucan-roi.git@v0.2.1
+    pip install git+https://github.com/BodenmillerGroup/immucan-roi.git@v0.2.2
 
 ## Usage
 
