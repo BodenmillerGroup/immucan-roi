@@ -1,11 +1,12 @@
-from napari.layers import Shapes
-from napari.viewer import Viewer
-from napari_roi import ROIWidget, ROIOrigin
-from napari_roi.qt import ROILayerAccessor
 from os import PathLike
 from pathlib import Path
-from qtpy.QtWidgets import QWidget
 from typing import TYPE_CHECKING, Optional, Union
+
+from napari.layers import Shapes
+from napari.viewer import Viewer
+from napari_roi import ROIOrigin, ROIWidget
+from napari_roi.qt import ROILayerAccessor
+from qtpy.QtWidgets import QWidget
 
 if TYPE_CHECKING:
     from immucan_roi import IMMUcanNappingApplication

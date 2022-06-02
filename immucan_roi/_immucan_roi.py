@@ -1,13 +1,13 @@
-import pandas as pd
 import sys
+from os import PathLike
+from pathlib import Path
+from typing import Optional, Union
 
+import pandas as pd
 from napari_imc import IMCWidget
 from napping import NappingApplication
 from napping.qt import NappingDialog, NappingViewer
-from os import PathLike
-from pathlib import Path
 from qtpy.QtWidgets import QFileDialog, QMessageBox
-from typing import Optional, Union
 
 from ._immucan_roi_widget import IMMUcanROIWidget
 
