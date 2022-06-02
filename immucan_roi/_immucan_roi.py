@@ -5,6 +5,8 @@ from typing import Optional, Union
 
 import pandas as pd
 from napari_imc import IMCWidget
+from napari_roi import ROIOrigin
+from napari_roi.qt import ROILayerAccessor
 from napping import NappingApplication
 from napping.qt import NappingDialog, NappingViewer
 from qtpy.QtWidgets import QFileDialog, QMessageBox
@@ -21,14 +23,14 @@ class IMMUcanNappingApplication(NappingApplication):
         current_source_coords = pd.read_csv(self._navigator.current_source_coords_file)
         if len(current_source_coords.index) > 0:
             self._current_source_coords = current_source_coords
+        else:
+            self._current_source_coords = None
         self._update_current_transf_coords()
         if not self._write_blocked and self._current_transf_coords is not None:
             with self._navigator.current_transf_coords_file.open(
                 mode="wb", buffering=0
             ) as f:
                 self._current_transf_coords.to_csv(f, mode="wb", index=False)
-        if self._current_widget is not None:
-            self._current_widget.refresh()
 
     def _create_dialog(self) -> NappingDialog:
         file_dialog = QFileDialog(caption="Select IMMUcan directory")
@@ -85,16 +87,14 @@ class IMMUcanNappingApplication(NappingApplication):
         return dialog
 
     def _create_source_viewer(self, img_file: Union[str, PathLike]) -> NappingViewer:
-        assert self._immucan_dir is not None
-        source_roi_dir = self._immucan_dir / "czi_rois"
-        source_roi_dir.mkdir(exist_ok=True)
         source_viewer = super(IMMUcanNappingApplication, self)._create_source_viewer(
             img_file
         )
         immucan_roi_layer = source_viewer.viewer.add_shapes(name="ROIs")
-        IMMUcanROIWidget.initialize_immucan_roi_layer(
-            immucan_roi_layer, self._navigator.current_source_coords_file
-        )
+        immucan_roi_layer_accessor = ROILayerAccessor(immucan_roi_layer)
+        immucan_roi_layer_accessor.roi_origin = ROIOrigin.CENTER
+        immucan_roi_layer_accessor.roi_file = self._navigator.current_source_coords_file
+        immucan_roi_layer_accessor.autosave_roi_file = True
         immucan_roi_widget = IMMUcanROIWidget(
             self, source_viewer.viewer, immucan_roi_layer
         )
@@ -104,15 +104,10 @@ class IMMUcanNappingApplication(NappingApplication):
         source_viewer.viewer.layers.selection.active = immucan_roi_layer
         if immucan_roi_widget.roi_file.exists():
             immucan_roi_widget.load_roi_file()
-        else:
-            immucan_roi_widget.save_roi_file()
         source_viewer.viewer.layers.selection.active = source_viewer.points_layer
         return source_viewer
 
     def _create_target_viewer(self, img_file: Union[str, PathLike]) -> NappingViewer:
-        assert self._immucan_dir is not None
-        target_roi_dir = self._immucan_dir / "mcd_rois"
-        target_roi_dir.mkdir(exist_ok=True)
         target_viewer = super(IMMUcanNappingApplication, self)._create_target_viewer(
             img_file
         )

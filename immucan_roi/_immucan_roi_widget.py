@@ -1,11 +1,8 @@
-from os import PathLike
-from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional
 
 from napari.layers import Shapes
 from napari.viewer import Viewer
-from napari_roi import ROIOrigin, ROIWidget
-from napari_roi.qt import ROILayerAccessor
+from napari_roi import ROIWidget
 from qtpy.QtWidgets import QWidget
 
 if TYPE_CHECKING:
@@ -13,15 +10,6 @@ if TYPE_CHECKING:
 
 
 class IMMUcanROIWidget(ROIWidget):
-    @staticmethod
-    def initialize_immucan_roi_layer(
-        immucan_roi_layer: Shapes, immucan_roi_file: Union[str, PathLike]
-    ) -> None:
-        immucan_roi_layer_accessor = ROILayerAccessor(immucan_roi_layer)
-        immucan_roi_layer_accessor.roi_origin = ROIOrigin.CENTER
-        immucan_roi_layer_accessor.roi_file = Path(immucan_roi_file)
-        immucan_roi_layer_accessor.autosave_roi_file = True
-
     def __init__(
         self,
         app: "IMMUcanNappingApplication",
@@ -40,17 +28,17 @@ class IMMUcanROIWidget(ROIWidget):
             self._app.reload_source_coords_and_update_and_save_transf_coords()
 
     def _on_roi_layer_changed(self, old_roi_layer: Optional[Shapes]) -> None:
+        self._roi_origin_combo_box.setEnabled(True)
         super(IMMUcanROIWidget, self)._on_roi_layer_changed(old_roi_layer)
         immucan_roi_layer = getattr(self, "_immucan_roi_layer", None)
-        self._roi_origin_combo_box.setEnabled(
-            immucan_roi_layer is not None and self._roi_layer != immucan_roi_layer
-        )
+        if immucan_roi_layer is not None and self._roi_layer == immucan_roi_layer:
+            self._roi_origin_combo_box.setEnabled(False)
 
     def _refresh_save_widget(self) -> None:
+        self._roi_file_line_edit.setEnabled(True)
+        self._autosave_roi_file_check_box.setEnabled(True)
         super(IMMUcanROIWidget, self)._refresh_save_widget()
         immucan_roi_layer = getattr(self, "_immucan_roi_layer", None)
         if immucan_roi_layer is not None and self._roi_layer == immucan_roi_layer:
             self._roi_file_line_edit.setEnabled(False)
             self._autosave_roi_file_check_box.setEnabled(False)
-        else:
-            pass  # skipped intentionally (already set in _refresh_save_widget)
